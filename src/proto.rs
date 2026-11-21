@@ -63,3 +63,24 @@ pub fn dec_welcome(b: &[u8]) -> Result<Family, String> {
     let mut model = Vec::with_capacity(61); for _ in 0..61 { model.push(r.f64()?); }
     Ok(Family { epoch, params, nodes, native_edges, model })
 }
+
+// ---- hub <-> broker frames ----
+pub const K_HUB_HELLO: u8 = 14; // magic u32, token 32 B
+pub const K_FAMILY: u8 = 8;     // same body as WELCOME (status 0 + family)
+pub const K_SLOT_REQ: u8 = 9;   // timeout ms u32
+pub const K_SLOT_OK: u8 = 10;   // suggested batch size u32
+pub const K_SLOT_NONE: u8 = 11; // no idle screener
+pub const K_SCREEN: u8 = 12;    // id u64, keep f32, n u32, n * 32 B nonces
+pub const K_SCREEN_REPLY: u8 = 13; // id u64, status u8 (0 ok), k u32, k * (index u32, score f64)
+
+pub fn enc_screen_reply(id: u64, status: u8, passes: &[(u32, f64)]) -> Vec<u8> {
+    let mut o = Vec::with_capacity(13 + passes.len() * 12);
+    o.extend_from_slice(&id.to_le_bytes()); o.push(status); o.extend_from_slice(&(passes.len() as u32).to_le_bytes());
+    for (i, s) in passes { o.extend_from_slice(&i.to_le_bytes()); o.extend_from_slice(&s.to_le_bytes()); }
+    o
+}
+pub fn dec_screen_reply(b: &[u8]) -> Result<(u64, u8, Vec<(u32, f64)>), String> {
+    let mut r = Rd::new(b); let id = r.u64()?; let st = r.u8()?; let k = r.u32()? as usize;
+    let mut v = Vec::with_capacity(k); for _ in 0..k { let i = r.u32()?; let s = r.f64()?; v.push((i, s)); }
+    Ok((id, st, v))
+}

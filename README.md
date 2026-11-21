@@ -13,6 +13,11 @@ Result: 6 of 6 real salts reproduce exactly (instance digest and all 41205 coupl
 Single thread on a desktop core: about 22 ms to generate plus about 13 ms to screen, roughly 28 salts/s per thread.
 On a shared 30-vCPU GPU box with the GPU worker running: 24 threads gave about 330 salts/s.
 
+## Step 3: broker, screener and hub client (working on a live node)
+`broker` and `screener` implement DESIGN.md; the hub-side client is `hub/0001-remote-screeners.patch` (see docs/HUB.md).
+A screener connected over a private network is used by the hub, every lease still accounts for every salt, and with no screener
+connected the hub behaves as before. `scripts/gcp_startup.sh` turns a CPU-only Google Compute Engine VM into a screener.
+
 ## Usage
     cargo build --release --offline
     ./target/release/gen-check family_dump.json
