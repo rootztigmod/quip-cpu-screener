@@ -1,0 +1,18 @@
+[package]
+name = "gen-check"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+
+[[bin]]
+name = "gen-check"
+path = "src/main.rs"
+
+[[bin]]
+name = "bench"
+path = "src/bin/bench.rs"
+
+[dependencies]
+quip-solver-core = "=0.0.15"
+quip-solver-conformance = "=0.0.15"
+serde_json = "1"

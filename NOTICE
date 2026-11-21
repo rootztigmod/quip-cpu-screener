@@ -1,0 +1,2 @@
+src/cpu_screen.rs is ported verbatim from the Quip CUDA native two-pass solver (AGPL-3.0-or-later).
+model.json holds the 61 numbers of the fitted ridge screen model used by that solver.
