@@ -1,5 +1,5 @@
 [package]
-name = "gen-check"
+name = "quip-cpu-screener"
 version = "0.1.0"
 edition = "2021"
 license = "AGPL-3.0-or-later"
@@ -11,6 +11,14 @@ path = "src/main.rs"
 [[bin]]
 name = "bench"
 path = "src/bin/bench.rs"
+
+[[bin]]
+name = "screener"
+path = "src/bin/screener.rs"
+
+[[bin]]
+name = "broker"
+path = "src/bin/broker.rs"
 
 [dependencies]
 quip-solver-core = "=0.0.15"
